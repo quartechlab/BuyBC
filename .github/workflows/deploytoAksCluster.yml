@@ -1,0 +1,51 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: aksiafbc.azurecr.io
+        username: ${{ secrets.acr_aksiafbc_username }}
+        password: ${{ secrets.acr_aksiafbc_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/BuyBC" -f  "https://github.com/quartechlab/BuyBC" -t aksiafbc.azurecr.io/testbuybc:${{ github.sha }} --label dockerfile-path=https://github.com/quartechlab/BuyBC
+        docker push aksiafbc.azurecr.io/testbuybc:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_testbuybc_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep test-buybc87bb | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace test-buybc87bb`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: test-buybc87bb
+        container-registry-url: aksiafbc.azurecr.io
+        container-registry-username: ${{ secrets.acr_aksiafbc_username }}
+        container-registry-password: ${{ secrets.acr_aksiafbc_password }}
+        secret-name: testbuybcdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: test-buybc87bb
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+          manifests/ingress.yml
+        images: |
+          aksiafbc.azurecr.io/testbuybc:${{ github.sha }}
+        imagepullsecrets: |
+          testbuybcdockerauth
