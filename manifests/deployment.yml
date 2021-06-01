@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "testbuybc-6d50"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "testbuybc-6d50"
+  template:
+    metadata:
+      labels:
+        app: "testbuybc-6d50"
+    spec:
+      containers:
+        - name: "testbuybc-6d50"
+          image: "aksiafbc.azurecr.io/testbuybc"
+          ports:
+          - containerPort: 443
