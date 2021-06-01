@@ -1,0 +1,33 @@
+ {
+    "env": "test",
+    "issuer": {
+      "name": "BuyBC",
+      "schemaName": "Buy BC Logo License"
+    },
+    "authentication": {
+      "enabled": true,
+      "autoSignOut": true,
+      "oidcSettings": {
+        "authority": "https://sso.quartech.app/auth/realms/buybc",
+        "clientId": "buybc-orgbook-issuer",
+        "redirectUri": "http://buybc-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io/oidc-callback",
+        "popupRedirectUri": "http://buybc-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io/oidc-popup-callback",
+        "responseType": "code",
+        "scope": "openid",
+        "automaticSilentRenew": true,
+        "automaticSilentSignin": false,
+        "silentRedirectUri": "http://buybc-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io/silent-renew-oidc.html",
+        "postLogoutRedirectUri": "http://buybc-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io/"
+      }
+    },
+    "api": {
+      "buyBCApiUrl": "http://buybc-api-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io",
+      "orgbookAPIUrl": "https://test.orgbook.gov.bc.ca/api",
+      "buyBCIssueUrl": "https://buybc-controller-test.apps.silver.devops.gov.bc.ca/issue-credential",
+      "callbackUrl": "http://buybc-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io",
+      "orgbookOrgUrl": "https://test.orgbook.gov.bc.ca/en/organization/registration.registries.ca/"
+    },
+    "verify": {
+      "verifyUrl": "http://consumer-app-test.c19e843f045b49c5a7a8.canadacentral.aksapp.io/verify/"
+    }
+  }
